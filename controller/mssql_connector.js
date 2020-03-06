@@ -1,4 +1,5 @@
 var sql = require('mssql');
+const randomString = require('random-base64-string')
 var sqlConfig = {
     user: 'SA',
     password: 'Gun11092544#',
@@ -30,7 +31,7 @@ exports.getUser = function(user,pass){
           }
     })
 }
-
+///////////////  GROUPS //////////////////////////////
 exports.get_all_groups = function(){
   return new Promise(async function(resolve, reject) {
       try {
@@ -47,3 +48,23 @@ exports.get_all_groups = function(){
         }
   })
 }
+exports.create_new_groups = function(groupName,inchargeName,inchargeLastName,locationText,province,amphoe,district,zipcode){
+  return new Promise(async function(resolve, reject) {
+      try {
+          console.log("sql connecting......");
+          let pool = await sql.connect(sqlConfig)
+          const generatedId = randomString(12);
+          let result = await pool.request().query(`INSERT INTO groups (groupId, groupName, inchargeName, inchargeLastName, locationInText , province , amphoe , district , zipcode) VALUES ('${generatedId}', '${groupName}', '${inchargeName}', '${inchargeLastName}','${locationText}','${province}','${amphoe}','${district}','${zipcode}')`); 
+          //console.log(result.recordset)
+          resolve(result);
+          
+        } catch (err) {
+          console.log(err);
+          resolve(err);
+          
+        }
+  })
+}
+
+
+///////////////  GROUPS //////////////////////////////

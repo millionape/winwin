@@ -52,30 +52,34 @@
     <div class="container" style="width: 100% !important; height: 80%;">
         <div class="card bg-light mt-3">
             <div class="card-header">
-                <h3>วินมอเตอร์ไซค์รับจ้าง</h3>
+                <div class="row">
+                    <h3 class="ml-3">วินมอเตอร์ไซค์รับจ้าง</h3>
+                    <a href="/createGroup" type="button" class="btn btn-success ml-3" style=" right: 0;">เพิ่มวินมอเตอร์ไซค์</a>
+                </div>
+
             </div>
-            
-        <div class="row mt-3 mx-auto" style="width: 95% !important; height: 80%;">
-            <% if (groups.length) {
+
+            <div class="row mt-3 mx-auto" style="width: 95% !important; height: 80%;">
+                <% if (groups.length) {
                 %>
-                  <% groups.forEach((group) => {%>
-                    <div class="col-md-4 mb-2">
-                        <div class="card bg-dark text-light" style="width: 18rem;">
-                            <div class="card-body">
-                              <h5 class="card-title">ชื่อวิน :<%= group.groupName%></h5>
-                              <p class="card-text">หัวหน้าวิน: <%= group.inchargeName%> <%= group.inchargeLastName%></p>
-                              <a href="/showgroup?id=<%= group.groupId%>" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                          </div>
+                <% groups.forEach((group) => {%>
+                <div class="col-md-4 mb-3">
+                    <div class="card bg-dark text-light" style="height: 100% !important;">
+                        <div class="card-body">
+                            <h4 class="card-title">ชื่อวิน :<%= group.groupName%></h4>
+                            <p class="card-text">หัวหน้าวิน: <%= group.inchargeName%> <%= group.inchargeLastName%></p>
+                            <a href="/showgroup?id=<%= group.groupId%>" class="btn btn-primary">ดูเพิ่มเติม</a>
+                        </div>
                     </div>
-                    <%
+                </div>
+                <%
                   }) %>
                 <%
               } %>
-            
-            
+
+
+            </div>
         </div>
-    </div>
 
 
     </div>

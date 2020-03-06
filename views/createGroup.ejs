@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+
+    <title>My first web</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../public/stylesheets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../public/stylesheets/vendor/jquery/jquery.js"></script>
+    <script src="../public/stylesheets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js">
+    </script>
+    <script>
+        var locates = <%- JSON.stringify(locations) %>;
+        console.log(locates)
+        $(document).ready(function () {
+            const provinces = [...new Set(locates.map(data => data['province']))]
+            for(var province of  provinces){
+                console.log('province');
+                $('#provinceSelect').append(`<option value="${province}"> ${province}</option>`)
+            }
+            var str = "";
+            $("#provinceSelect").change(function() {
+                var amphoeArr = [];
+                console.log($( this ).val());
+                for(var province of  locates){
+                    if($( this ).val() === province.province){
+                        amphoeArr.push(province.amphoe)
+                    }
+                }
+                const uniques = amphoeArr.filter((x, i, a) => a.indexOf(x) == i)
+                console.log(uniques)
+                $("#amphoeSelect").empty()
+                $("#amphoeSelect").append(`<option selected="selected">เลือกอำเภอ-เขต</option>`);
+                for(var amphoe of uniques){
+                    $("#amphoeSelect").append(`
+                    <option value="${amphoe}"> ${amphoe}</option>
+                `)
+                }
+                
+
+            // Check input( $( this ).val() ) for validity here
+            });
+            $("#amphoeSelect").change(function() {
+                var districts = [];
+                for(var amphoe of  locates){
+                    if($( this ).val() === amphoe.amphoe){
+                        districts.push(amphoe.district)
+                    }
+                }
+                const uniques = districts.filter((x, i, a) => a.indexOf(x) == i)
+                console.log(uniques)
+                $("#districtSelect").empty()
+                $("#districtSelect").append(`<option selected="selected">เลือกตำบล-แขวง</option>`);
+                for(var district of uniques){
+                    $("#districtSelect").append(`
+                    <option value="${district}"> ${district}</option>
+                `)
+                }
+
+            });
+            $("#districtSelect").change(function() {
+                var zipcode;
+                for(var district of locates){
+                    if($( this ).val() === district.district){
+                        zipcode = district.zipcode;
+                        break;
+                    }
+                }
+                $('#zipcodeInput').val('');
+                $('#zipcodeInput').val(zipcode);
+
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Start Bootstrap</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <!-- mt stands for Margin-top -->
+    <div class="container" style="width: 100% !important; height: 80%;">
+        <div class="card bg-light mt-3">
+            <div class="card-header">
+                <h3>เพิ่มวินมอเตอร์ไซค์</h3>
+            </div>
+            <div class="card-body">
+                <form action="/newGroupForm" method="post">
+                    <h5>ชื่อวิน</h5>
+                    <div class="input-group flex-nowrap">
+                        <input type="text" class="form-control" placeholder="ชื่อวิน" aria-label="Username"
+                            aria-describedby="addon-wrapping" name="groupName" required="required">
+                    </div>
+                    <br>
+                    <h5>ชื่อขนามสกุล หัวหน้าวิน</h5>
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" class="form-control" name="inchargeName" placeholder="First name" required="required">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" name="inchargeLastName" placeholder="Last name" required="required">
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">ที่ตั้งวิน</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                            name="locationText" required="required"></textarea>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>จังหวัด</h5>
+                            <select class="form-control" name="province" id="provinceSelect">
+                                <option selected="selected" value="-1">เลือกจังหวัด</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>เขต-อำเภอ</h5>
+                            <select class="form-control" name="amphoe" id="amphoeSelect">
+                                <option selected="selected" value="-1">เลือกอำเภอ-เขต</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <dic class="row">
+                        <div class="col-sm-6">
+                            <h5>แขวง-ตำบล</h5>
+                            <select class="form-control" name="district" id="districtSelect" >
+                                <option selected="selected" value="-1">เลือกแขวง-ตำบล</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>รหัสไปรษณีย์</h5>
+                            <input type="number" name="zipcode" class="form-control" placeholder="Zip code" id="zipcodeInput">
+                        </div>
+                    </dic>
+                    <br>
+                    <button type="submit" class="btn btn-success mx-auto mt-2 w-100">บันทึก</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
