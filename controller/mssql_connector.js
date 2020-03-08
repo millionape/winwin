@@ -19,8 +19,8 @@ exports.getUser = function (user, pass) {
       //console.log(result.recordset)
       for (var auth of result.recordset) {
         if (user === auth.userLogin && pass === auth.userPassword) {
-          // res.cookie('userId', auth.userId)
-          resolve(auth.userId);
+          console.log('auth is :',auth)
+          resolve(auth);
         }
       }
       resolve(false);

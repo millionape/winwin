@@ -23,6 +23,7 @@ router.get('/', function (req, res, next) {
 });
 router.get('/logout', function (req, res, next) {
   res.clearCookie("userId");
+  res.clearCookie("displayName");
   res.redirect('/')
 });
 router.get('/showGroup', auth, async function (req, res, next) {
@@ -36,7 +37,8 @@ router.get('/showGroup', auth, async function (req, res, next) {
       res.render('editGroup', {
         locations: datas,
         groupData: response.recordset[0],
-        members: members.recordset
+        members: members.recordset,
+        displayName : req.cookies.displayName
       });
     }
   })
@@ -60,7 +62,8 @@ router.get('/createGroup', auth, function (req, res, next) {
   // }
   // console.log(categories)
   res.render('createGroup', {
-    locations: datas
+    locations: datas,
+    displayName : req.cookies.displayName
   });
 });
 router.get('/memberEdit', auth, function (req, res, next) {
@@ -69,7 +72,8 @@ router.get('/memberEdit', auth, function (req, res, next) {
   db.get_member_from_id(memberId).then(function(result){
     console.log('member info ',result.recordset[0])
     res.render('editMember', {
-      memberInfo: result.recordset[0]
+      memberInfo: result.recordset[0],
+      displayName : req.cookies.displayName
     });
   })
   
@@ -78,7 +82,8 @@ router.get('/admin', auth, function (req, res, next) {
   db.get_all_groups().then(function (result) {
     console.log('groups :', result);
     res.render('admin', {
-      groups: result.recordset
+      groups: result.recordset,
+      displayName : req.cookies.displayName
     });
   })
 });
@@ -88,7 +93,8 @@ router.get('/addMemberToGroup', auth, function (req, res, next) {
   const groupName = req.query.groupName;
   res.render('createMember', {
     groupId: groupId,
-    groupName: groupName
+    groupName: groupName,
+    displayName : req.cookies.displayName
   })
 });
 router.post('/newGroupForm', auth, function (req, res) {
@@ -143,7 +149,8 @@ router.post('/login', function (req, res) {
     db.getUser(user, pass).then(function (result) {
       console.log('auth:', result);
       if (result !== false) {
-        res.cookie('userId', result)
+        res.cookie('userId', result.userId)
+        res.cookie('displayName', result.userName)
         res.redirect('/admin')
       } else {
         res.render('error', {
