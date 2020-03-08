@@ -49,23 +49,51 @@
 
     <!-- Page Content -->
     <!-- mt stands for Margin-top -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">ลบข้อมูลสมาชิก</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              คุณแน่ใจที่จะลบไหม?
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger ml-3">ลบ</a>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+              <!-- <button type="button" class="btn btn-primary">ใช่</button> -->
+              
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="container" style="width: 100% !important; height: 150% !important;">
         <div class="card bg-light mt-3" style="margin-bottom: 100px;">
             <div class="card-header">
-                <h3>เพิ่ม สมาชิกในวิน : <%-groupName%></h3>
+                <div class="row ml-2">
+                    <h3>แก้ไขข้อมูลสมาชิก</h3>
+                    <!-- <a href="#" class="btn btn-danger ml-3">ลบ</a> -->
+                    <button type="button" class="btn btn-danger ml-3" data-toggle="modal" data-target="#exampleModal">
+                        ลบข้อมูลสมาชิกนี้
+                      </button>
+                </div>
+                
             </div>
             <div class="card-body">
-                <form action="/newMemberForm" method="post">
-                    <h5>ชื่อ-นามสกุล สมาชิก</h5>
-                    <input type="hidden" id="custId" name="groupId" value="<%-groupId%>">
+                <form action="/editMemberForm" method="post">
+                    <h5>ชื่อ-นามสกุล</h5>
+                    <input type="hidden" id="custId" name="groupId" value="<%=memberInfo.groupId%>">
                     <div class="row">
                         <div class="col">
                             <input type="text" class="form-control" placeholder="ชื่อ" name="memberName"
-                                placeholder="First name" required="required">
+                                placeholder="First name" required="required" value="<%=memberInfo.personName%>">
                         </div>
                         <div class="col">
                             <input type="text" class="form-control" placeholder="นามสกุล" name="memberLastName"
-                                placeholder="Last name" required="required">
+                                placeholder="Last name" required="required" value="<%=memberInfo.personLastName%>">
                         </div>
                     </div>
                     <br>
@@ -73,8 +101,13 @@
                         <div class="col-sm-6">
                             <h5>เพศ</h5>
                             <select id="gender" name="gender" style="width: 100%;">
-                                <option value="male">ชาย</option>
-                                <option value="female">หญิง</option>
+                                <% if (memberInfo.gender === 'male') { %>
+                                    <option value="male" selected>ชาย</option>
+                                    <option value="female">หญิง</option>
+                                <%} else { %>
+                                    <option value="male">ชาย</option>
+                                    <option value="female" selected>หญิง</option>
+                                <% } %>
                             </select>
                         </div>
                         <div class="col-sm-6">
@@ -85,46 +118,46 @@
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">หมายเลขบัตรประจำตัวประชาชน</label>
                         <input class="form-control" placeholder="หมายเลขบัตรประจำตัวประชาชน"
-                            id="exampleFormControlTextarea1" name="memberThaiId" required="required"></input>
+                            id="exampleFormControlTextarea1" name="memberThaiId" required="required" value="<%=memberInfo.personId%>"></input>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">เบอร์โทรศัพท์</label>
                         <input class="form-control" placeholder="เบอร์โทรศัพท์" name="memberMobileNumber"
-                            required="required"></input>
+                            required="required" value="<%=memberInfo.mobileNumber%>"></input>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">เบอร์เสื้อ</label>
                         <input class="form-control" placeholder="เบอร์เสื้อ" name="memberShirtNumber"
-                            required="required"></input>
+                            required="required" value="<%=memberInfo.shirtNumber%>"></input>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <label>ยี่ห้อรถจักรยานยนต์</label>
                             <input class="form-control" placeholder="ยี่ห้อรถจักรยานยนต์" name="motorcycleBrand"
-                                required="required"></input>
+                                required="required" value="<%=memberInfo.motorcycleBrand%>"></input>
                         </div>
                         <div class="col-sm-6">
                             <label>สีรถจักรยานยนต์</label>
                             <input class="form-control" placeholder="สีรถจักรยานยนต์" name="motorcycleColor"
-                                required="required"></input>
+                                required="required" value="<%=memberInfo.motorcycleColor%>"></input>
                         </div>
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">เลขเครื่อง</label>
                         <input class="form-control" placeholder="เลขเครื่อง" name="memberMotorcycleSerial"
-                            required="required"></input>
+                            required="required" value="<%=memberInfo.motorcycleSerial%>"></input>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">ป้ายทะเบียน</label>
                         <input class="form-control" placeholder="ป้ายทะเบียน" name="memberLicenseNumber"
-                            required="required"></input>
+                            required="required" value="<%=memberInfo.licensePlate%>"></input>
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">ประเภทใบขับขี่</label>
                         <input class="form-control" placeholder="ประเภทใบขับขี่" name="memberLicenseType"
-                            required="required"></input>
+                            required="required" value="<%=memberInfo.licenseType%>"></input>
                     </div>
                     <br>
                     <button type="submit" class="btn btn-success mx-auto mt-2 w-100">บันทึก</button>

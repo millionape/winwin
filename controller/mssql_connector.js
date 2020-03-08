@@ -138,12 +138,45 @@ exports.create_new_members = function (groupId, memberName, memberLastName, memb
     }
   })
 }
+exports.edit_members = function (memberName, memberLastName, memberThaiId, memberMobileNumber, memberShirtNumber, motorcycleBrand, motorcycleColor,memberLicenseNumber,memberLicenseType,memberMotorcycleSerial,gender) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......");
+      let pool = await sql.connect(sqlConfig)
+      let result = await pool.request().query(`UPDATE personInfo SET personName='${memberName}', personLastName='${memberLastName}', mobileNumber='${memberMobileNumber}' , shirtNumber='${memberShirtNumber}' , motorcycleBrand='${motorcycleBrand}' , motorcycleColor='${motorcycleColor}' ,
+                                                 licensePlate='${memberLicenseNumber}' , licenseType='${memberLicenseType}' , motorcycleSerial='${memberMotorcycleSerial}', gender='${gender}' WHERE personId='${memberThaiId}'`);
+      //console.log(result.recordset)
+      resolve(result);
+
+    } catch (err) {
+      console.log(err);
+      resolve(err);
+
+    }
+  })
+}
 exports.list_members_in_group = function(groupId){
   return new Promise(async function (resolve, reject) {
     try {
       console.log("sql connecting......");
       let pool = await sql.connect(sqlConfig)
       let result = await pool.request().query(`SELECT TOP 1000 * FROM dbo.personInfo WHERE groupId='${groupId}'`);
+      //console.log(result.recordset)
+      resolve(result);
+
+    } catch (err) {
+      console.log(err);
+      resolve(err);
+
+    }
+  })
+}
+exports.get_member_from_id = function(memberId){
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......");
+      let pool = await sql.connect(sqlConfig)
+      let result = await pool.request().query(`SELECT * FROM dbo.personInfo WHERE personId='${memberId}'`);
       //console.log(result.recordset)
       resolve(result);
 

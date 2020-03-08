@@ -63,6 +63,17 @@ router.get('/createGroup', auth, function (req, res, next) {
     locations: datas
   });
 });
+router.get('/memberEdit', auth, function (req, res, next) {
+  const memberId = req.query.memberId;
+  
+  db.get_member_from_id(memberId).then(function(result){
+    console.log('member info ',result.recordset[0])
+    res.render('editMember', {
+      memberInfo: result.recordset[0]
+    });
+  })
+  
+});
 router.get('/admin', auth, function (req, res, next) {
   db.get_all_groups().then(function (result) {
     console.log('groups :', result);
@@ -166,7 +177,27 @@ router.post('/newMemberForm', auth, function (req, res) {
     }
   )
 })
-
+router.post('/editMemberForm', auth, function (req, res) {
+  var backURL = req.header('Referer') || '/';
+  var groupId = req.body.groupId;
+  var memberName = req.body.memberName;
+  var memberLastName = req.body.memberLastName;
+  var memberThaiId = req.body.memberThaiId;
+  var memberMobileNumber = req.body.memberMobileNumber;
+  var memberShirtNumber = req.body.memberShirtNumber;
+  var motorcycleBrand = req.body.motorcycleBrand;
+  var motorcycleColor = req.body.motorcycleColor;
+  var memberLicenseNumber = req.body.memberLicenseNumber;
+  var memberLicenseType = req.body.memberLicenseType;
+  var memberMotorcycleSerial = req.body.memberMotorcycleSerial;
+  var gender = req.body.gender;
+  db.edit_members( memberName, memberLastName, memberThaiId, memberMobileNumber, memberShirtNumber, motorcycleBrand, motorcycleColor, memberLicenseNumber, memberLicenseType, memberMotorcycleSerial, gender).then(
+    function (result) {
+      console.log('edit member result :', result);
+      res.redirect(`/showgroup?id=${groupId}`);
+    }
+  )
+})
 
 
 module.exports = router;
