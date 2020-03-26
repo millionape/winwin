@@ -3,7 +3,7 @@ const randomString = require('random-base64-string')
 var sqlConfig = {
   user: 'SA',
   password: 'Gun11092544#',
-  server: '13.229.88.179',
+  server: '13.229.194.207',
   database: 'myDatabase',
   // options: {
   //   encrypt: true
@@ -25,6 +25,21 @@ exports.getUser = function (user, pass) {
       }
       resolve(false);
 
+    } catch (err) {
+      console.log(err);
+      resolve(false);
+
+    }
+  })
+}
+exports.userLookup = function (user, pass) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......")
+      let pool = await sql.connect(sqlConfig)
+      let result = await pool.request().query('select * from users')
+      //console.log(result.recordset)
+      resolve(result.recordset);
     } catch (err) {
       console.log(err);
       resolve(false);
@@ -189,3 +204,89 @@ exports.get_member_from_id = function(memberId){
 }
 
 ///////////////// MEMBES //////////////////////////////////
+
+exports.searchGroup = function (keyword) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......");
+      let pool = await sql.connect(sqlConfig)
+      let result = await pool.request().query(`SELECT * FROM dbo.groups WHERE groupName LIKE '%${keyword}%'`);
+      console.log('select result :',result);
+      resolve(result);
+
+    } catch (err) {
+      console.log(err);
+      resolve(err);
+
+    }
+  });
+}
+exports.searchPerson = function (keyword) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......");
+      let pool = await sql.connect(sqlConfig)
+      let result = await pool.request().query(`SELECT * FROM dbo.personInfo WHERE personName LIKE '%${keyword}%' OR personLastName LIKE '%${keyword}%'`);
+      console.log('select result :',result);
+      resolve(result);
+
+    } catch (err) {
+      console.log(err);
+      resolve(err);
+
+    }
+  });
+}
+exports.upload = function (files,personId) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......");
+      let pool_res = await new sql.ConnectionPool(sqlConfig);
+      pool_res.connect().then(async function(){
+        var binBuff = new Buffer(files, 'binary');
+        console.log('Buffer ==>',binBuff)
+        console.log('personId ==>',personId)
+        var ps = await new sql.PreparedStatement(pool_res);
+        ps.input('theImage', sql.VarBinary);
+        ps.prepare(`UPDATE personInfo SET docs=(@theImage) WHERE personId='${personId}'`, function (err) {
+            // check err
+            if(err) console.log("err first ==>",err);
+            ps.execute({theImage: binBuff}, function(err, records) {
+                if(err) console.log("err second ==>",err);
+                console.log('upload res===>:',records)
+                ps.unprepare(function(err) {
+                  if(err){
+                    console.log('something error 2:',err);
+                    resolve({result:"NG"});
+                  }
+                  resolve({result:"GG"});
+                    // check err
+                    // If no error, it's been inserted!
+                });
+            });
+        });
+      });
+    } catch (err) {
+      console.log(err);
+      resolve(err);
+    }
+  });
+}
+exports.create_new_user = function (memberName, memberLastName,userName,password,email) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      console.log("sql connecting......");
+      let pool = await sql.connect(sqlConfig)
+      const generatedId = randomString(12);
+      let result = await pool.request().query(`INSERT INTO users (userId, userLogin,userPassword, userName, userLastName, userEmail) 
+                VALUES ('${generatedId}', '${userName}', '${password}','${memberName}','${memberLastName}','${email}')`);
+      //console.log(result.recordset)
+      resolve(result);
+
+    } catch (err) {
+      console.log(err);
+      resolve(err);
+
+    }
+  })
+}

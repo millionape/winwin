@@ -2,6 +2,8 @@
 var express = require('express');
 var location = require('../controller/locationDatas')
 var db = require('../controller/mssql_connector')
+var randomstring = require("randomstring");
+var moment = require('moment');
 const fs = require('fs');
 
 var router = express.Router();
@@ -204,7 +206,109 @@ router.post('/editMemberForm', auth, function (req, res) {
       res.redirect(`/showgroup?id=${groupId}`);
     }
   )
-})
+});
+router.post('/searchGroup', auth, function (req, res) {
+  var groupKeyword = req.body.groupKeyword;
+  console.log('recv',groupKeyword);
+  db.searchGroup(groupKeyword).then(function(response){
+    console.log('res count:',response.rowsAffected);
+    // res.send(response);
+    res.render('groupSearchShow', {
+      keyword : groupKeyword,
+      groups: response.recordset,
+      displayName : req.cookies.displayName
+    });
+  });
+  
+  
+});
+router.post('/searchPerson', auth, function (req, res) {
+  var personKeyword = req.body.personKeyword;
+  console.log('recv',personKeyword);
+  db.searchPerson(personKeyword).then(function(response){
+    console.log('res count:',response.rowsAffected);
+    res.render('personSearchShow', {
+      keyword : personKeyword,
+      person: response.recordset,
+      displayName : req.cookies.displayName
+    });
+  });
+  
+  
+});
+router.post('/upload', function(req, res) {
+  var personId = req.body.personId;
+  console.log('recv person id ====>',personId)
+  console.log(req.files);
+  if(req.files.length >0){
+    db.upload(req.files[0]['buffer'],personId).then(function(resp){
+      console.log("upload res ==>",resp);
+      res.redirect('back');
+    });
+  }else{
+    res.render('error',{
+      title:"อัพโหลดผิดพลาด",
+      msg: "ไม่พบเอกสาร หรือ เอกสารไม่ถูกต้อง"
+    })
+  }
+  
+  
+});
 
+router.post('/pre_download', function(req, res){
+  var personId = req.body.personId;
+  db.get_member_from_id(personId).then(function(result){
+    console.log('member info ',result.recordset[0]);
+    const person = result.recordset[0];
+    if(person.docs){
+      var fileContents = Buffer.from(person.docs, "binary");
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename=${person.personId}.pdf`,
+      });
+      res.end(fileContents);  
+    }else{
+      res.render('error',{
+        title:"ดาวน์โหลดผิดพลาด",
+        msg: "ไม่พบเอกสาร หรือ เอกสารไม่ถูกต้อง"
+      })
+    }
+  });
+});
+router.get('/userList', auth, function (req, res) {
+  var personKeyword = req.body.personKeyword;
+  console.log('recv',personKeyword);
+  db.userLookup().then(function(response){
+    console.log('user res :',response);
+    res.render('userShow', {
+      person: response,
+      displayName : req.cookies.displayName
+    });
+  });
+  
+  
+});
+router.get('/createUser', auth, function (req, res) {
+  res.render('createUser', {
+    
+    displayName : req.cookies.displayName
+  });  
+});
+
+router.post('/newUserForm', auth, function (req, res) {
+  var backURL = req.header('Referer') || '/';
+  var memberName = req.body.memberName;
+  var memberLastName = req.body.memberLastName;
+  var userName = req.body.userName;
+  var password = req.body.password;
+  var email = req.body.email;
+  
+  db.create_new_user(memberName, memberLastName,userName,password,email).then(
+    function (result) {
+      console.log('new user result :', result);
+      res.redirect('/userList');
+    }
+  );
+})
 
 module.exports = router;

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <link rel="icon" href="../public/stylesheets/icon/scooter.png">
+
+    <title>ระบบจัดการวินมอเตอร์ไซค์</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../public/stylesheets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../public/stylesheets/vendor/jquery/jquery.js"></script>
+    <script src="../public/stylesheets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js">
+    </script>
+    <script>
+        function editUser(userId){
+            console.log("user id :",userId);
+        }
+        $(document).ready(function () {
+            // console.log("ready!");
+        
+        });
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/admin">ระบบจัดการวินมอเตอร์ไซค์</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mr-3">
+                        <a type="button" class="btn btn-outline-light text-light">ชื่อผู้ใช้ : <%=displayName%></a>
+                    </li>
+
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/admin">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <!-- mt stands for Margin-top -->
+    <div class="container" style="width: 100% !important; height: 80%;">
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h3>รายชื่อผู้ใช้ระบบทั้งหมด</h3>
+                    </div>
+                    <div class="col-sm-2">
+
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="/createUser" class="btn btn-info">เพิ่มผู้ใช้</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="card bg-light mt-3">
+            
+            <table class="table mx-auto" style="width: 100%;">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">user name</th>
+                    <th scope="col">password</th>
+                    <th scope="col">ชื่อ</th>
+                    <th scope="col">นามสกุล</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">แก้ไข</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% person.forEach((item) => {%>
+                        <tr>
+                            <td><%= item.userLogin%></td>
+                            <td><%= item.userPassword%></td>
+                            <td><%= item.userName%></td>
+                            <td><%= item.userLastName%></td>
+                            <td><%= item.userName%></td>
+                            <td><a class="btn btn-primary text-light" onclick="editUser('<%= item.userId%>')" role="button">แก้ไข</a></td>
+                        </tr>
+                    <% })%>
+                </tbody>
+              </table>
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

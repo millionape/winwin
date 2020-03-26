@@ -18,7 +18,7 @@
     </script>
     <script>
         $(document).ready(function () {
-
+            console.log('person id --->',$('#person_id').val())
         });
     </script>
 </head>
@@ -33,15 +33,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                <li class="nav-item mr-3">
-                        <a type="button" class="btn btn-outline-light text-light" >ชื่อผู้ใช้ : <%=displayName%></a>
+                    <li class="nav-item mr-3">
+                        <a type="button" class="btn btn-outline-light text-light">ชื่อผู้ใช้ : <%=displayName%></a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/admin">Home
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">logout</a>
                     </li>
@@ -52,27 +52,28 @@
 
     <!-- Page Content -->
     <!-- mt stands for Margin-top -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">ลบข้อมูลสมาชิก</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ลบข้อมูลสมาชิก</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    คุณแน่ใจที่จะลบไหม?
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-danger ml-3">ลบ</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                    <!-- <button type="button" class="btn btn-primary">ใช่</button> -->
+
+                </div>
             </div>
-            <div class="modal-body">
-              คุณแน่ใจที่จะลบไหม?
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-danger ml-3">ลบ</a>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
-              <!-- <button type="button" class="btn btn-primary">ใช่</button> -->
-              
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
     <div class="container" style="width: 100% !important; height: 150% !important;">
         <div class="card bg-light mt-3" style="margin-bottom: 100px;">
             <div class="card-header">
@@ -81,9 +82,9 @@
                     <!-- <a href="#" class="btn btn-danger ml-3">ลบ</a> -->
                     <button type="button" class="btn btn-danger ml-3" data-toggle="modal" data-target="#exampleModal">
                         ลบข้อมูลสมาชิกนี้
-                      </button>
+                    </button>
                 </div>
-                
+
             </div>
             <div class="card-body">
                 <form action="/editMemberForm" method="post">
@@ -105,11 +106,11 @@
                             <h5>เพศ</h5>
                             <select id="gender" name="gender" style="width: 100%;">
                                 <% if (memberInfo.gender === 'male') { %>
-                                    <option value="male" selected>ชาย</option>
-                                    <option value="female">หญิง</option>
+                                <option value="male" selected>ชาย</option>
+                                <option value="female">หญิง</option>
                                 <%} else { %>
-                                    <option value="male">ชาย</option>
-                                    <option value="female" selected>หญิง</option>
+                                <option value="male">ชาย</option>
+                                <option value="female" selected>หญิง</option>
                                 <% } %>
                             </select>
                         </div>
@@ -121,7 +122,8 @@
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">หมายเลขบัตรประจำตัวประชาชน</label>
                         <input class="form-control" placeholder="หมายเลขบัตรประจำตัวประชาชน"
-                            id="exampleFormControlTextarea1" name="memberThaiId" required="required" value="<%=memberInfo.personId%>"></input>
+                            id="person_id" name="memberThaiId" required="required"
+                            value="<%=memberInfo.personId%>"></input>
                     </div>
 
                     <div class="form-group">
@@ -165,6 +167,33 @@
                     <br>
                     <button type="submit" class="btn btn-success mx-auto mt-2 w-100">บันทึก</button>
                 </form>
+                <br>
+                <div class="card bg-warning text-dark">
+                    <div class="card-header">
+                        <h3>อัพโหลด เอกสาร</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/upload" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="personId" value="<%=memberInfo.personId%>">
+                            <input type="file" name="file" accept="application/pdf">
+                            <input type="submit" value="Upload">
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <% if (memberInfo.docs) { %>
+                <div class="card bg-warning text-dark">
+                    <div class="card-header">
+                        <h3>ดาวน์โหลด เอกสาร</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/pre_download" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="personId" value="<%=memberInfo.personId%>">
+                            <input type="submit" value="Download">
+                        </form>
+                    </div>
+                </div>
+                <% } %>
             </div>
         </div>
 

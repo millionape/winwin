@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "myDatabase",
+            "dialect": "MSSQL",
+            "isActive": false,
+            "isConnected": false,
+            "name": "AWS MSSQL",
+            "password": "Gun11092544#",
+            "port": 1433,
+            "server": "13.229.194.207",
+            "username": "SA"
+        }
+    ]
+}
