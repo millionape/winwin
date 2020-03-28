@@ -175,7 +175,7 @@ exports.list_members_in_group = function(groupId){
     try {
       console.log("sql connecting......");
       let pool = await sql.connect(sqlConfig)
-      let result = await pool.request().query(`SELECT TOP 1000 * FROM dbo.personInfo WHERE groupId='${groupId}'`);
+      let result = await pool.request().query(`SELECT indexes,personName,personLastName,personId,mobileNumber,shirtNumber,motorcycleBrand,motorcycleColor,licensePlate,licenseType FROM dbo.personInfo WHERE groupId='${groupId}'`);
       //console.log(result.recordset)
       resolve(result);
 
