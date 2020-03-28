@@ -21,11 +21,13 @@
         var groupData = <%-JSON.stringify(groupData) %> ;
         var members = <%-JSON.stringify(members) %> ;
         console.log('member in this group :', members);
+        members.reverse()
         $(document).ready(function () {
+            var indexes = 1;
             for(var member of members){
                 $('#myTable > tbody:last-child').append(`
                     <tr>
-                        <th scope="row">${member.indexes}</th>
+                        <th scope="row">${indexes}</th>
                         <td>${member.personName}</td>
                         <td>${member.personLastName}</td>
                         <td>${member.personId}</td>
@@ -37,6 +39,7 @@
                         <td><a class="btn btn-primary" href="/memberEdit?memberId=${member.personId}" role="button">เพิ่มเติม</a></td>
                     </tr>
                 `);
+                indexes += 1;
             }
             
             $('#addMembersButton').attr('href',

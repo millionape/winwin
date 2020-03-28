@@ -263,8 +263,8 @@ router.post('/pre_download', function(req, res){
     if(person.docs){
       var fileContents = Buffer.from(person.docs, "binary");
       res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=${person.personId}.pdf`,
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'Content-Disposition': `attachment; filename=${person.personId}.docx`,
       });
       res.end(fileContents);  
     }else{
