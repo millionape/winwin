@@ -17,7 +17,7 @@ const auth = (req, res, next) => {
 
 router.get('/', function (req, res, next) {
   if(req.cookies.userId !== undefined){
-    res.redirect('/admin')
+    res.redirect('/home')
   }else{
     res.render('index');
   }
@@ -51,7 +51,7 @@ router.get('/deleteGroup', auth, function (req, res, next) {
   db.groupDelete(groupId).then(function(result){
     if(result){
       console.log('delete status :',result);
-      res.redirect('/admin')
+      res.redirect('/home')
     }
   })
 
@@ -80,7 +80,7 @@ router.get('/memberEdit', auth, function (req, res, next) {
   })
   
 });
-router.get('/admin', auth, function (req, res, next) {
+router.get('/home', auth, function (req, res, next) {
   db.get_all_groups().then(function (result) {
     console.log('groups :', result);
     res.render('admin', {
@@ -117,7 +117,7 @@ router.post('/newGroupForm', auth, function (req, res) {
     district)
   db.create_new_groups(groupName, inchargeName, inchargeLastName, locationText, province, amphoe, district, zipcode).then(function (result) {
     console.log('insert result is', result);
-    res.redirect('/admin');
+    res.redirect('/home');
   });
 });
 router.post('/editGroupForm', auth, function (req, res) {
@@ -153,7 +153,7 @@ router.post('/login', function (req, res) {
       if (result !== false) {
         res.cookie('userId', result.userId)
         res.cookie('displayName', result.userName)
-        res.redirect('/admin')
+        res.redirect('/home')
       } else {
         res.render('error', {
           title: "Auth error",
