@@ -30,7 +30,7 @@
     "random-base64-string": "^1.0.1",
     "randomstring": "^1.1.5",
     "request": "^2.88.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {
     "firebase": "^7.3.0"
