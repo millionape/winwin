@@ -11,7 +11,7 @@
     "body-parser": "^1.19.0",
     "bootstrap-input-spinner": "^1.11.17",
     "bootstrap-waitingfor": "^1.2.7",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
